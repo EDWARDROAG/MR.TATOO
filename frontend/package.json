@@ -1,0 +1,208 @@
+{
+  "name": "mr-tatoo",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Frontend Mr. Tatoo — estudio de tatuaje (fork CoreX)",
+  "author": "Mr. Tatoo / Lamakinet",
+  "license": "MIT",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EDWARDROAG/CoreX.git"
+  },
+  "bugs": {
+    "url": "https://github.com/EDWARDROAG/CoreX/issues"
+  },
+  "keywords": [
+    "react",
+    "ecommerce",
+    "shopping",
+    "pwa",
+    "redux",
+    "tailwindcss"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "scripts": {
+    "dev": "vite --port 5510",
+    "start": "vite --port 5510",
+    "build": "vite build",
+    "build:dev": "vite build --mode development",
+    "build:staging": "vite build --mode staging",
+    "build:prod": "vite build --mode production",
+    "build:docker": "vite build --mode docker",
+    "build:pages": "vite build --mode pages",
+    "preview": "vite preview",
+    "serve": "vite preview",
+    "analyze": "source-map-explorer 'dist/assets/*.js'",
+    "clean": "rm -rf dist node_modules/.vite",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "test:watch": "vitest --watch",
+    "lint": "eslint src --ext js,jsx,ts,tsx",
+    "lint:fix": "eslint src --ext js,jsx,ts,tsx --fix",
+    "check:code-health": "node ../scripts/check-code-health.mjs",
+    "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,scss,md}'",
+    "format:check": "prettier --check 'src/**/*.{js,jsx,ts,tsx,css,scss,md}'",
+    "type-check": "tsc --noEmit",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "prepare": "husky install",
+    "precommit": "lint-staged",
+    "eject": "react-scripts eject",
+    "generate": "plop",
+    "analyze:bundle": "vite-bundle-visualizer"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.19",
+    "@mui/material": "^5.14.20",
+    "@paypal/react-paypal-js": "^8.1.0",
+    "@reduxjs/toolkit": "^1.9.7",
+    "@stripe/stripe-js": "^2.2.0",
+    "axios": "^1.6.2",
+    "chart.js": "^4.4.1",
+    "clsx": "^2.0.0",
+    "date-fns": "^2.30.0",
+    "framer-motion": "^10.16.16",
+    "i18next": "^23.7.6",
+    "i18next-browser-languagedetector": "^7.2.0",
+    "i18next-http-backend": "^2.4.2",
+    "notistack": "^3.0.1",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18.2.0",
+    "react-google-recaptcha": "^3.1.0",
+    "react-helmet-async": "^2.0.4",
+    "react-hook-form": "^7.48.2",
+    "react-i18next": "^13.5.0",
+    "react-infinite-scroll-component": "^6.1.0",
+    "react-query": "^3.39.3",
+    "react-redux": "^8.1.3",
+    "react-router-dom": "^6.20.1",
+    "react-toastify": "^9.1.3",
+    "react-whatsapp-widget": "^2.2.0",
+    "recharts": "^2.10.3",
+    "socket.io-client": "^4.5.4",
+    "swiper": "^11.0.5",
+    "yup": "^1.3.3"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
+    "@storybook/addon-actions": "^7.6.4",
+    "@storybook/addon-essentials": "^7.6.4",
+    "@storybook/addon-interactions": "^7.6.4",
+    "@storybook/addon-links": "^7.6.4",
+    "@storybook/addon-onboarding": "^1.0.9",
+    "@storybook/react": "^7.6.4",
+    "@storybook/react-vite": "^7.6.4",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@tailwindcss/forms": "^0.5.11",
+    "@tailwindcss/typography": "^0.5.20",
+    "@testing-library/jest-dom": "^6.1.5",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/user-event": "^14.5.1",
+    "@types/node": "^20.10.4",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.17",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.16",
+    "cssnano": "^8.0.1",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "husky": "^8.0.3",
+    "jsdom": "^23.0.1",
+    "lint-staged": "^15.2.0",
+    "plop": "^4.0.1",
+    "postcss": "^8.4.32",
+    "postcss-import": "^16.1.1",
+    "postcss-mixins": "^12.1.2",
+    "postcss-nesting": "^14.0.0",
+    "prettier": "^3.1.1",
+    "prettier-plugin-tailwindcss": "^0.5.9",
+    "source-map-explorer": "^2.5.3",
+    "storybook": "^7.6.4",
+    "tailwindcss": "^3.3.6",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.7",
+    "vite-bundle-visualizer": "^1.0.0",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-eslint": "^1.8.1",
+    "vite-plugin-imagemin": "^0.6.1",
+    "vite-plugin-pwa": "^0.17.5",
+    "vite-plugin-svgr": "^4.2.0",
+    "vitest": "^1.0.4",
+    "whatwg-fetch": "^3.6.2",
+    "workbox-window": "^7.0.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,scss,md}": [
+      "prettier --write"
+    ]
+  },
+  "plop": {
+    "generators": {
+      "component": {
+        "description": "Create a new component",
+        "prompts": [
+          {
+            "type": "input",
+            "name": "name",
+            "message": "Component name:"
+          }
+        ],
+        "actions": [
+          {
+            "type": "add",
+            "path": "src/components/{{pascalCase name}}/{{pascalCase name}}.tsx",
+            "templateFile": "plop-templates/component.hbs"
+          },
+          {
+            "type": "add",
+            "path": "src/components/{{pascalCase name}}/{{pascalCase name}}.module.css",
+            "templateFile": "plop-templates/styles.hbs"
+          },
+          {
+            "type": "add",
+            "path": "src/components/{{pascalCase name}}/index.ts",
+            "templateFile": "plop-templates/index.hbs"
+          }
+        ]
+      }
+    }
+  },
+  "volta": {
+    "node": "18.18.0",
+    "npm": "10.2.5"
+  }
+}

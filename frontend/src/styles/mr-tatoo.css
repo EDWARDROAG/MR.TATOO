@@ -1,0 +1,481 @@
+.mrtatoo-public {
+  background: #080808;
+  color: #f4f1ea;
+}
+
+.mrtatoo-vitrina-banner {
+  margin: 0;
+  background: #c41e3a;
+  color: #fff;
+  text-align: center;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.4rem 1rem;
+}
+
+.mrtatoo-logo {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #f4f1ea;
+}
+
+.mrtatoo-logo-sub {
+  font-size: 0.58rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #9a9a9a;
+}
+
+.mrtatoo-brand-logo {
+  height: 44px;
+  width: auto;
+  max-width: 220px;
+  display: block;
+  object-fit: contain;
+}
+
+.mrtatoo-brand-logo--footer {
+  height: 88px;
+  max-width: 280px;
+  margin-bottom: 0.85rem;
+}
+
+.mrtatoo-hero {
+  position: relative;
+  min-height: 88vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #080808;
+  scroll-margin-top: 5rem;
+}
+
+.mrtatoo-hero__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(0.35) contrast(1.05) brightness(0.55);
+}
+
+.mrtatoo-hero__veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(8, 8, 8, 0.92) 0%, rgba(8, 8, 8, 0.55) 48%, rgba(8, 8, 8, 0.35) 100%);
+}
+
+.mrtatoo-hero__inner {
+  position: relative;
+  z-index: 1;
+  width: min(1120px, calc(100% - 2rem));
+  padding: 4.5rem 0 5rem;
+}
+
+.mrtatoo-kicker {
+  font-size: 0.72rem;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: #9a9a9a;
+}
+
+.mrtatoo-hero h1 {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: clamp(2.6rem, 7vw, 5.2rem);
+  line-height: 0.95;
+  letter-spacing: 0.06em;
+  margin: 0.7rem 0 0.4rem;
+}
+
+.mrtatoo-hero h1 span {
+  color: #c41e3a;
+}
+
+.mrtatoo-claim {
+  font-size: clamp(1.15rem, 2.4vw, 1.7rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.7rem;
+}
+
+.mrtatoo-hero p {
+  color: #cfcfcf;
+  max-width: 36rem;
+}
+
+.mrtatoo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-top: 1.6rem;
+}
+
+.mrtatoo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid transparent;
+  padding: 0.85rem 1.25rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.mrtatoo-btn--primary {
+  background: #c41e3a;
+  color: #fff;
+}
+
+.mrtatoo-btn--ghost {
+  background: transparent;
+  border-color: #f4f1ea;
+  color: #f4f1ea;
+}
+
+.mrtatoo-btn:hover {
+  opacity: 0.92;
+}
+
+.mrtatoo-quote-aside {
+  position: absolute;
+  right: 6%;
+  top: 22%;
+  z-index: 1;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  line-height: 1.15;
+  max-width: 10rem;
+  text-align: right;
+  color: #fff;
+  opacity: 0.88;
+}
+
+.mrtatoo-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  padding: 1.4rem 8%;
+  border-top: 1px solid #2a2a2a;
+  border-bottom: 1px solid #2a2a2a;
+  background: #0d0d0d;
+}
+
+.mrtatoo-strip strong {
+  display: block;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mrtatoo-strip span {
+  color: #9a9a9a;
+  font-size: 0.78rem;
+}
+
+.mrtatoo-section {
+  padding: 4.2rem 8%;
+  scroll-margin-top: 5rem;
+}
+
+#cotizar {
+  scroll-margin-top: 5rem;
+}
+
+.mrtatoo-section h2 {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  letter-spacing: 0.08em;
+  margin-bottom: 1.4rem;
+}
+
+.mrtatoo-section h2 span {
+  color: #c41e3a;
+}
+
+.mrtatoo-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.9rem;
+  margin-bottom: 1.4rem;
+}
+
+.mrtatoo-filters button {
+  background: none;
+  border: 0;
+  color: #9a9a9a;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0.25rem 0;
+}
+
+.mrtatoo-filters button.is-on,
+.mrtatoo-filters button:hover {
+  color: #c41e3a;
+}
+
+.mrtatoo-masonry {
+  columns: 3;
+  column-gap: 0.85rem;
+}
+
+.mrtatoo-masonry figure {
+  break-inside: avoid;
+  margin: 0 0 0.85rem;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: #111;
+}
+
+.mrtatoo-masonry img {
+  width: 100%;
+  display: block;
+  min-height: 180px;
+  object-fit: cover;
+  filter: grayscale(0.15);
+  transition: transform 0.4s ease;
+}
+
+.mrtatoo-masonry figure:hover img {
+  transform: scale(1.04);
+}
+
+.mrtatoo-styles {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.75rem;
+}
+
+.mrtatoo-style {
+  position: relative;
+  min-height: 150px;
+  background: #141414;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: flex-end;
+  padding: 0.8rem;
+}
+
+.mrtatoo-style img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.45;
+}
+
+.mrtatoo-style strong,
+.mrtatoo-style small {
+  position: relative;
+  z-index: 1;
+  display: block;
+}
+
+.mrtatoo-style strong {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+}
+
+.mrtatoo-style small {
+  color: #bbb;
+}
+
+.mrtatoo-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.mrtatoo-stats b {
+  display: block;
+  font-size: 1.6rem;
+  color: #c41e3a;
+}
+
+.mrtatoo-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+}
+
+.mrtatoo-split--artist {
+  align-items: start;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+}
+
+.mrtatoo-artist-photo {
+  margin: 0;
+  background: #0a0a0a;
+  overflow: visible;
+}
+
+.mrtatoo-artist-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  object-fit: contain;
+  object-position: center top;
+}
+
+.mrtatoo-steps {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.mrtatoo-step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.7rem;
+  align-items: start;
+}
+
+.mrtatoo-step em {
+  font-style: normal;
+  color: #c41e3a;
+  font-weight: 800;
+}
+
+.mrtatoo-form {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.mrtatoo-form input,
+.mrtatoo-form select,
+.mrtatoo-form textarea {
+  width: 100%;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  color: #f4f1ea;
+  padding: 0.75rem 0.85rem;
+}
+
+.mrtatoo-shop {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.75rem;
+}
+
+.mrtatoo-card {
+  background: #111;
+  padding-bottom: 0.8rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.mrtatoo-card .ph {
+  height: 150px;
+  background: linear-gradient(160deg, #1a1a1a, #2c2c2c);
+}
+
+.mrtatoo-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.mrtatoo-card p,
+.mrtatoo-card strong {
+  display: block;
+  padding: 0 0.6rem;
+}
+
+.mrtatoo-card p {
+  margin-top: 0.55rem;
+  font-size: 0.82rem;
+}
+
+.mrtatoo-card strong {
+  color: #c41e3a;
+  font-size: 0.82rem;
+}
+
+.mrtatoo-feed {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.4rem;
+}
+
+.mrtatoo-feed img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  filter: grayscale(0.4);
+}
+
+.mrtatoo-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 1.2rem;
+}
+
+.mrtatoo-modal__box {
+  width: min(720px, 100%);
+  background: #111;
+  border: 1px solid #2a2a2a;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+}
+
+.mrtatoo-modal__box img {
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  object-fit: cover;
+}
+
+.mrtatoo-modal__box div {
+  padding: 1.2rem;
+}
+
+@media (max-width: 1024px) {
+  .mrtatoo-styles,
+  .mrtatoo-shop,
+  .mrtatoo-feed,
+  .mrtatoo-strip,
+  .mrtatoo-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .mrtatoo-masonry {
+    columns: 2;
+  }
+  .mrtatoo-split,
+  .mrtatoo-modal__box {
+    grid-template-columns: 1fr;
+  }
+  .mrtatoo-quote-aside {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .mrtatoo-section {
+    padding: 3rem 1.1rem;
+  }
+  .mrtatoo-masonry,
+  .mrtatoo-styles,
+  .mrtatoo-shop,
+  .mrtatoo-feed,
+  .mrtatoo-strip,
+  .mrtatoo-stats {
+    grid-template-columns: 1fr;
+    columns: 1;
+  }
+}

@@ -1,0 +1,27 @@
+# Mr. Tatoo — entorno local (solo PostgreSQL)
+# Uso: docker compose -f docker/docker-compose.dev.yml up -d
+
+name: mr-tatoo-dev
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: mr-tatoo-postgres-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: mr_tatoo_db
+      POSTGRES_USER: mr_tatoo_user
+      POSTGRES_PASSWORD: mr_tatoo_local_pass
+    ports:
+      - "5438:5432"
+    volumes:
+      - mr_tatoo_postgres_data:/var/lib/postgresql/data
+      - ../database/init-mr-tatoo-postgres.sql:/docker-entrypoint-initdb.d/01-init-mr-tatoo.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mr_tatoo_user -d mr_tatoo_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mr_tatoo_postgres_data:

@@ -1,0 +1,34 @@
+# Override producción — backend/.env.production
+# Uso: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+services:
+  backend:
+    container_name: mr-tatoo-prod-api
+    env_file:
+      - ./backend/.env.production
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      NODE_ENV: production
+    restart: always
+
+  frontend:
+    container_name: mr-tatoo-prod-web
+    build:
+      context: ./frontend
+      dockerfile: ../docker/Dockerfile.frontend
+      args:
+        BUILD_MODE: prod
+    ports:
+      - "${PUBLIC_PORT:-5519}:80"
+    restart: always
+
+  postgres:
+    container_name: mr-tatoo-prod-postgres
+    env_file:
+      - ./backend/.env.production
+    environment:
+      POSTGRES_DB: mr_tatoo_db
+      POSTGRES_USER: mr_tatoo_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    restart: always

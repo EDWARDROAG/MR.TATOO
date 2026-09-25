@@ -1,0 +1,19 @@
+# Override LAN — backend/.env.lan + puerto público 5519
+
+services:
+  backend:
+    container_name: mr-tatoo-lan-api
+    env_file:
+      - ./backend/.env.lan
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      NODE_ENV: production
+
+  frontend:
+    container_name: mr-tatoo-lan-web
+    ports:
+      - "${PUBLIC_PORT:-5519}:80"
+
+  postgres:
+    container_name: mr-tatoo-lan-postgres

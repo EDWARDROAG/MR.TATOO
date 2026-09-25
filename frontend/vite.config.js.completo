@@ -1,0 +1,451 @@
+// vite.config.js
+// frontend/vite.config.js
+
+import { defineConfig, loadEnv } from 'vite';
+import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
+import svgr from 'vite-plugin-svgr';
+import eslint from 'vite-plugin-eslint';
+import { VitePWA } from 'vite-plugin-pwa';
+import viteCompression from 'vite-plugin-compression';
+import viteImagemin from 'vite-plugin-imagemin';
+import { visualizer } from 'rollup-plugin-visualizer';
+import checker from 'vite-plugin-checker';
+import legacy from '@vitejs/plugin-legacy';
+
+// https://vitejs.dev/config/
+export default defineConfig(({ command, mode }) => {
+  // Cargar variables de entorno según el modo
+  const env = loadEnv(mode, process.cwd(), '');
+  
+  const isProduction = mode === 'production';
+  const isDevelopment = mode === 'development';
+  const isAnalyze = mode === 'analyze';
+  
+  return {
+    base: '/CoreX/',
+    
+    // Configuración de plugins
+    plugins: [
+      // React Fast Refresh
+      react({
+        include: '**/*.{jsx,tsx}',
+        babel: {
+          plugins: [
+            ['@babel/plugin-transform-runtime', {
+              useESModules: true,
+              regenerator: false
+            }]
+          ]
+        }
+      }),
+      
+      // SVGR para importar SVGs como componentes React
+      svgr({
+        svgrOptions: {
+          icon: true,
+          svgo: true,
+          svgoConfig: {
+            plugins: [
+              {
+                name: 'removeViewBox',
+                active: false
+              }
+            ]
+          }
+        },
+        include: '**/*.svg?react',
+      }),
+      
+      // ESLint integrado
+      eslint({
+        lintOnStart: true,
+        cache: false,
+        fix: true,
+        include: ['src/**/*.{js,jsx,ts,tsx}'],
+        exclude: ['node_modules', 'dist']
+      }),
+      
+      // TypeScript checker
+      checker({
+        typescript: true,
+        overlay: {
+          initialIsOpen: false,
+          position: 'br'
+        },
+        terminal: true
+      }),
+      
+      // PWA (Progressive Web App)
+      VitePWA({
+        registerType: 'autoUpdate',
+        includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
+        manifest: {
+          name: env.VITE_APP_NAME || 'CoreX',
+          short_name: 'CoreX',
+          description: env.VITE_APP_DESCRIPTION || 'Plataforma de ventas y mantenimiento',
+          theme_color: '#3b82f6',
+          background_color: '#ffffff',
+          display: 'standalone',
+          orientation: 'portrait',
+          scope: '/',
+          start_url: '/',
+          icons: [
+            {
+              src: '/icon-192.png',
+              sizes: '192x192',
+              type: 'image/png',
+              purpose: 'any maskable'
+            },
+            {
+              src: '/icon-512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'any maskable'
+            }
+          ]
+        },
+        workbox: {
+          globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+          runtimeCaching: [
+            {
+              urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'google-fonts-cache',
+                expiration: {
+                  maxEntries: 10,
+                  maxAgeSeconds: 60 * 60 * 24 * 365
+                }
+              }
+            },
+            {
+              urlPattern: /^https:\/\/api\./i,
+              handler: 'NetworkFirst',
+              options: {
+                cacheName: 'api-cache',
+                networkTimeoutSeconds: 10,
+                expiration: {
+                  maxEntries: 50,
+                  maxAgeSeconds: 60 * 30
+                }
+              }
+            }
+          ]
+        },
+        devOptions: {
+          enabled: isDevelopment,
+          type: 'module'
+        }
+      }),
+      
+      // Compresión gzip/brotli
+      viteCompression({
+        algorithm: 'gzip',
+        ext: '.gz',
+        threshold: 1024,
+        deleteOriginFile: false
+      }),
+      
+      viteCompression({
+        algorithm: 'brotliCompress',
+        ext: '.br',
+        threshold: 1024,
+        deleteOriginFile: false
+      }),
+      
+      // Optimización de imágenes
+      viteImagemin({
+        gifsicle: {
+          optimizationLevel: 7,
+          interlaced: false
+        },
+        optipng: {
+          optimizationLevel: 7
+        },
+        mozjpeg: {
+          quality: 80
+        },
+        pngquant: {
+          quality: [0.8, 0.9],
+          speed: 4
+        },
+        svgo: {
+          plugins: [
+            {
+              name: 'removeViewBox',
+              active: false
+            },
+            {
+              name: 'removeEmptyAttrs',
+              active: false
+            }
+          ]
+        }
+      }),
+      
+      // Soporte para navegadores antiguos
+      legacy({
+        targets: ['defaults', 'not IE 11'],
+        additionalLegacyPolyfills: ['regenerator-runtime/runtime'],
+        renderLegacyChunks: true,
+        polyfills: [
+          'es.symbol',
+          'es.promise',
+          'es.array.iterator',
+          'es.object.assign',
+          'es.object.values'
+        ]
+      }),
+      
+      // Analizador de bundle (solo en modo analyze)
+      isAnalyze && visualizer({
+        open: true,
+        filename: 'dist/stats.html',
+        gzipSize: true,
+        brotliSize: true
+      })
+    ].filter(Boolean),
+    
+    // Configuración de rutas y alias
+    resolve: {
+      alias: {
+        '@': resolve(__dirname, 'src'),
+        '@components': resolve(__dirname, 'src/components'),
+        '@pages': resolve(__dirname, 'src/pages'),
+        '@hooks': resolve(__dirname, 'src/hooks'),
+        '@utils': resolve(__dirname, 'src/utils'),
+        '@services': resolve(__dirname, 'src/services'),
+        '@store': resolve(__dirname, 'src/store'),
+        '@styles': resolve(__dirname, 'src/styles'),
+        '@assets': resolve(__dirname, 'src/assets'),
+        '@layouts': resolve(__dirname, 'src/layouts'),
+        '@config': resolve(__dirname, 'src/config'),
+        '@lib': resolve(__dirname, 'src/lib'),
+        '@types': resolve(__dirname, 'src/types')
+      },
+      extensions: ['.js', '.jsx', '.ts', '.tsx', '.json', '.css', '.scss']
+    },
+    
+    // Servidor de desarrollo
+    server: {
+      port: parseInt(env.VITE_PORT || '3000'),
+      host: true,
+      open: true,
+      strictPort: false,
+      https: false,
+      cors: true,
+      
+      // Proxy para API
+      proxy: {
+        '/api': {
+          target: env.VITE_API_URL || 'http://localhost:8000',
+          changeOrigin: true,
+          secure: false,
+          rewrite: (path) => path.replace(/^\/api/, ''),
+          configure: (proxy, options) => {
+            proxy.on('error', (err, req, res) => {
+              console.log('Proxy error:', err);
+            });
+            proxy.on('proxyReq', (proxyReq, req, res) => {
+              console.log('Proxying:', req.method, req.url);
+            });
+          }
+        },
+        '/ws': {
+          target: env.VITE_WS_URL || 'ws://localhost:8000',
+          ws: true,
+          changeOrigin: true
+        },
+        '/uploads': {
+          target: env.VITE_API_URL || 'http://localhost:8000',
+          changeOrigin: true
+        }
+      },
+      
+      // Hot Module Replacement
+      hmr: {
+        overlay: true,
+        protocol: 'ws',
+        host: 'localhost',
+        port: 3000
+      },
+      
+      // Watch options
+      watch: {
+        usePolling: false,
+        interval: 1000
+      }
+    },
+    
+    // Configuración de build
+    build: {
+      outDir: 'dist',
+      assetsDir: 'assets',
+      sourcemap: isDevelopment ? 'inline' : false,
+      minify: isProduction ? 'esbuild' : false,
+      target: 'es2015',
+      cssTarget: 'chrome80',
+      
+      // Tamaño de chunk
+      chunkSizeWarningLimit: 1000,
+      
+      // Rollup options
+      rollupOptions: {
+        input: {
+          main: resolve(__dirname, 'index.html')
+        },
+        output: {
+          manualChunks: {
+            // Librerías principales
+            'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+            'redux-vendor': ['@reduxjs/toolkit', 'react-redux'],
+            'mui-vendor': ['@mui/material', '@mui/icons-material', '@emotion/react', '@emotion/styled'],
+            'ui-vendor': ['react-hook-form', 'yup', 'notistack', 'react-toastify'],
+            'chart-vendor': ['recharts', 'chart.js', 'react-chartjs-2'],
+            'i18n-vendor': ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
+            'axios-vendor': ['axios'],
+            'date-vendor': ['date-fns'],
+            'animation-vendor': ['framer-motion']
+          },
+          // Estrategia de nombres para chunks
+          chunkFileNames: () => {
+            if (isProduction) {
+              return 'assets/[name]-[hash].js';
+            }
+            return 'assets/[name].js';
+          },
+          assetFileNames: (assetInfo) => {
+            const info = assetInfo.name.split('.');
+            const ext = info[info.length - 1];
+            if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(ext)) {
+              return `assets/images/[name]-[hash][extname]`;
+            }
+            if (/css/i.test(ext)) {
+              return `assets/css/[name]-[hash][extname]`;
+            }
+            if (/woff|woff2|eot|ttf|otf/i.test(ext)) {
+              return `assets/fonts/[name]-[hash][extname]`;
+            }
+            return `assets/[name]-[hash][extname]`;
+          }
+        },
+        external: []
+      },
+      
+      // Soporte para librerías CommonJS (SOLO UNO - CORREGIDO)
+      commonjsOptions: {
+        include: [/node_modules/],
+        transformMixedEsModules: true
+      },
+      
+      // Terser options (minificación)
+      terserOptions: {
+        compress: {
+          drop_console: isProduction,
+          drop_debugger: isProduction,
+          pure_funcs: isProduction ? ['console.log', 'console.info', 'console.debug'] : []
+        },
+        mangle: {
+          safari10: true
+        },
+        output: {
+          comments: false,
+          beautify: false
+        }
+      },
+      
+      // Reportes de build
+      reportCompressedSize: true,
+      brotliSize: true
+    },
+    
+    // Configuración de CSS
+    css: {
+      modules: {
+        localsConvention: 'camelCase',
+        generateScopedName: isProduction
+          ? '[hash:base64:8]'
+          : '[name]__[local]__[hash:base64:5]',
+        hashPrefix: 'corex'
+      },
+      preprocessorOptions: {
+        scss: {
+          additionalData: `@import "@/styles/variables.scss";`,
+          sassOptions: {
+            indentWidth: 2,
+            outputStyle: 'expanded'
+          }
+        },
+        less: {
+          javascriptEnabled: true,
+          modifyVars: {
+            'primary-color': '#3b82f6'
+          }
+        }
+      },
+      devSourcemap: isDevelopment
+    },
+    
+    // Optimización de dependencias
+    optimizeDeps: {
+      include: [
+        'react',
+        'react-dom',
+        'react-router-dom',
+        '@reduxjs/toolkit',
+        'react-redux',
+        'axios',
+        'date-fns',
+        'i18next',
+        'react-i18next',
+        '@mui/material',
+        '@emotion/react',
+        '@emotion/styled',
+        'recharts',
+        'framer-motion'
+      ],
+      exclude: [],
+      esbuildOptions: {
+        target: 'es2020',
+        treeShaking: true
+      }
+    },
+    
+    // Preview server (para probar build local)
+    preview: {
+      port: 3001,
+      host: true,
+      open: true,
+      https: false,
+      cors: true,
+      strictPort: false
+    },
+    
+    // Variables de entorno expuestas al cliente
+    define: {
+      __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
+      __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.VITE_API_URL': JSON.stringify(env.VITE_API_URL),
+      'process.env.VITE_WS_URL': JSON.stringify(env.VITE_WS_URL),
+      'process.env.VITE_APP_NAME': JSON.stringify(env.VITE_APP_NAME)
+    },
+    
+    // Configuración de ESBuild
+    esbuild: {
+      jsxFactory: 'React.createElement',
+      jsxFragment: 'React.Fragment',
+      jsxInject: `import React from 'react'`,
+      legalComments: 'none',
+      treeShaking: true
+    },
+    
+    // Configuración de cache
+    cacheDir: '.vite-cache',
+    
+    // Logging
+    logLevel: isDevelopment ? 'info' : 'warn',
+    clearScreen: true
+  };
+});

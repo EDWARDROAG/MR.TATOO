@@ -1,0 +1,67 @@
+# Mr. Tatoo — Docker base (PostgreSQL + API + Frontend nginx)
+#
+# LAN:  .\start-lan.ps1 [-Build]
+# Prod: ./start-prod.sh [--build]
+
+name: mr-tatoo
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: mr-tatoo-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: mr_tatoo_db
+      POSTGRES_USER: mr_tatoo_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-mr_tatoo_docker_pass}
+    volumes:
+      - mr_tatoo_postgres_data:/var/lib/postgresql/data
+      - ./database/init-mr-tatoo-postgres.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mr_tatoo_user -d mr_tatoo_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - mr-tatoo-net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../docker/Dockerfile.backend
+    container_name: mr-tatoo-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend/uploads:/app/uploads
+    networks:
+      - mr-tatoo-net
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3011/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/Dockerfile.frontend
+      args:
+        BUILD_MODE: docker
+    container_name: mr-tatoo-web
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - mr-tatoo-net
+
+volumes:
+  mr_tatoo_postgres_data:
+
+networks:
+  mr-tatoo-net:
+    driver: bridge

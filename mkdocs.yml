@@ -1,0 +1,83 @@
+﻿# MR. TATOO â€” Docs internas (MkDocs Material)
+# HU-065 Â· Plantilla: Documentos/docs/desarrollo/plantilla-mkdocs-producto/
+
+site_name: "MR. TATOO â€” Docs"
+site_description: DocumentaciÃ³n interna MR. TATOO (admin)
+site_author: Soluciones Lamakinet / MR. TATOO
+site_url: https://core-x-techs.com/docs/
+
+docs_dir: docs
+# Servido por Vite/nginx en la misma origen que la app
+site_dir: frontend/public/docs
+
+theme:
+  name: material
+  language: es
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: Modo oscuro
+    - scheme: slate
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Modo claro
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+
+plugins:
+  - search
+  - mermaid2
+  - git-revision-date-localized:
+      enable_creation_date: true
+      fallback_to_build_date: true
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+
+nav:
+  - Inicio: index.md
+  - Estado:
+      - Memoria: memory.md
+  - Producto:
+      - Historias de usuario: HISTORIAS_USUARIO.md
+      - Entornos: ENTORNOS.md
+      - CÃ³digo vivo: CODIGO-VIVO.md
+  - Despliegue:
+      - Plan maestro: DESPLIEGUE.md
+      - ProducciÃ³n MV: DEPLOY-PRODUCCION.md
+      - Flujo Git: FLUJO-GIT.md
+      - Repo privado: REPO-PRIVADO.md
+  - GuÃ­as:
+      - Admin: ADMIN_GUIDE.md
+      - Cajero: CAJERO_GUIDE.md
+      - API: API_DOCS.md
+      - InstalaciÃ³n local: INSTALLATION.md
+      - Troubleshooting: TROUBLESHOOTING.md
+      - Super admin: SUPER-ADMIN.md
+
+extra:
+  generator: false

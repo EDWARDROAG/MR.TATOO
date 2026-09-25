@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<!-- ========================================================================== -->
+<!--                                                                            -->
+<!--  📄 ARCHIVO: index.html                                                    -->
+<!--  📁 UBICACIÓN: frontend/public/index.html                                  -->
+<!--  🚀 MÓDULO: Frontend - Entry Point                                         -->
+<!--  🏷️  VERSIÓN: v1.0.0                                                      -->
+<!--  📅 ÚLTIMA ACTUALIZACIÓN: 2026-06-09 10:30                                 -->
+<!--  👨‍💻 AUTOR: CoreX Team                                                     -->
+<!--                                                                            -->
+<!-- ========================================================================== -->
+<!--                                                                            -->
+<!--  🎯 PROPÓSITO                                                              -->
+<!--  ------------------------------------------------------------------------  -->
+<!--  Punto de entrada principal de la aplicación web CoreX.                   -->
+<!--  Define la estructura base del HTML, meta tags, títulos, fuentes y        -->
+<!--  el contenedor raíz donde React montará toda la interfaz.                 -->
+<!--                                                                            -->
+<!--  🧩 FUNCIONALIDADES PRINCIPALES                                            -->
+<!--  ------------------------------------------------------------------------  -->
+<!--  ✅ Contenedor raíz #root para React                                       -->
+<!--  ✅ Viewport responsive para dispositivos móviles                          -->
+<!--  ✅ Meta tags para SEO y redes sociales                                    -->
+<!--  ✅ Preconexión a APIs y servicios externos                                -->
+<!--  ✅ Soporte para tema oscuro/claro (prefers-color-scheme)                 -->
+<!--  ✅ Fuentes optimizadas y fallbacks                                        -->
+<!--                                                                            -->
+<!--  📦 DEPENDENCIAS                                                           -->
+<!--  ------------------------------------------------------------------------  -->
+<!--  • React 18 - Biblioteca principal                                         -->
+<!--  • React DOM - Renderizado                                                 -->
+<!--  • TailwindCSS - Estilos (enlazado desde assets)                          -->
+<!--                                                                            -->
+<!--  🔗 RELACIONES                                                             -->
+<!--  ------------------------------------------------------------------------  -->
+<!--  • Importa: src/index.js (punto de entrada React)                         -->
+<!--  • Usa: Vite como bundler                                                  -->
+<!--  • Relacionado con: public/logo.png, public/favicon.ico                   -->
+<!--                                                                            -->
+<!--  ⚠️ NOTAS IMPORTANTES                                                      -->
+<!--  ------------------------------------------------------------------------  -->
+<!--  • No modificar el div con id="root" - React lo necesita                  -->
+<!--  • Las variables de entorno de Vite usan prefijo VITE_                    -->
+<!--  • El manifest.json es opcional pero recomendado para PWA                 -->
+<!--  • Los estilos se inyectan automáticamente por Vite en producción        -->
+<!--                                                                            -->
+<!--  🛠️ HISTORIAL DE CAMBIOS                                                   -->
+<!--  ------------------------------------------------------------------------  -->
+<!--  [v1.0.0] - 2026-06-09                                                    -->
+<!--      ✅ Creación inicial del index.html                                   -->
+<!--      ✅ Configuración de meta tags para SEO                               -->
+<!--      ✅ Soporte para tema oscuro/claro                                    -->
+<!--      ✅ Integración con React y Vite                                      -->
+<!--                                                                            -->
+<!-- ========================================================================== -->
+
+<html lang="es">
+  <head>
+    <!-- ======================================================================= -->
+    <!-- METADATOS BÁSICOS                                                       -->
+    <!-- ======================================================================= -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    
+    <!-- ======================================================================= -->
+    <!-- TÍTULO Y DESCRIPCIÓN                                                    -->
+    <!-- ======================================================================= -->
+    <title>Mr. Tatoo — Arte que vive en tu piel | Bogotá</title>
+    <meta name="title" content="Mr. Tatoo — Ink. Art. Identity." />
+    <meta name="description" content="Tatuajes personalizados en Bogotá. Portafolio, cotización y tienda. Sitio de muestra." />
+    <meta name="keywords" content="tatuajes Bogotá, blackwork, realismo, fine line, Mr. Tatoo" />
+    <meta name="author" content="Mr. Tatoo" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="Spanish" />
+    <meta name="revisit-after" content="7 days" />
+    
+    <!-- ======================================================================= -->
+    <!-- ICONOS Y FAVICON                                                        -->
+    <!-- ======================================================================= -->
+    <link rel="icon" type="image/jpeg" href="%BASE_URL%images/demo/favicon.png" />
+    <link rel="apple-touch-icon" href="%BASE_URL%images/demo/favicon.png" />
+    <link rel="shortcut icon" href="%BASE_URL%images/demo/favicon.png" />
+    
+    <!-- ======================================================================= -->
+    <!-- OPEN GRAPH (REDES SOCIALES)                                             -->
+    <!-- ======================================================================= -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://core-x-techs.com/" />
+    <meta property="og:title" content="Mr. Tatoo — Ink. Art. Identity." />
+    <meta property="og:description" content="Tatuajes personalizados en Bogotá. Portafolio, cotización y tienda. Sitio de muestra." />
+    <meta property="og:image" content="%BASE_URL%images/demo/hero-tatuador.jpg" />
+    <meta property="og:site_name" content="Mr. Tatoo" />
+    <meta property="og:locale" content="es_CO" />
+    
+    <!-- ======================================================================= -->
+    <!-- TWITTER CARD                                                            -->
+    <!-- ======================================================================= -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://core-x-techs.com/" />
+    <meta name="twitter:title" content="Mr. Tatoo — Ink. Art. Identity." />
+    <meta name="twitter:description" content="Tatuajes personalizados en Bogotá. Sitio de muestra." />
+    <meta name="twitter:image" content="%BASE_URL%images/demo/hero-tatuador.jpg" />
+    
+    <!-- ======================================================================= -->
+    <!-- TEMA Y COLORES                                                          -->
+    <!-- ======================================================================= -->
+    <meta name="theme-color" content="#080808" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="msapplication-TileColor" content="#2563EB" />
+    
+    <!-- ======================================================================= -->
+    <!-- PRELECTURAS Y OPTIMIZACIÓN                                              -->
+    <!-- ======================================================================= -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://api.whatsapp.com" />
+    
+    <!-- ======================================================================= -->
+    <!-- FUENTES (fallbacks para rendimiento)                                    -->
+    <!-- ======================================================================= -->
+    <!-- Nota: Las fuentes se cargan de forma asíncrona para no bloquear el render -->
+    <link 
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" 
+      rel="stylesheet" 
+      media="print" 
+      onload="this.media='all'"
+    />
+    
+    <!-- ======================================================================= -->
+    <!-- ESTILOS CRÍTICOS EN LÍNEA (evita FOIT)                                  -->
+    <!-- ======================================================================= -->
+    <style>
+      /* Fallback para evitar Flash of Unstyled Content */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        font-family: 'Cinzel', 'Inter', Georgia, serif;
+        background-color: #080808;
+        color: #f4f1ea;
+        transition: background-color 0.3s ease;
+      }
+      
+      /* Soporte para tema oscuro nativo */
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: #111827;
+        }
+      }
+      
+      /* Loader minimalista mientras carga React */
+      #root {
+        min-height: 100vh;
+      }
+      
+      .corex-loader {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-size: 1.25rem;
+        color: #6b7280;
+      }
+      
+      @media (prefers-color-scheme: dark) {
+        .corex-loader {
+          color: #9ca3af;
+        }
+      }
+    </style>
+    
+    <!-- ======================================================================= -->
+    <!-- SCRIPT DE INICIALIZACIÓN TEMPRANA (tema sin parpadeo)                   -->
+    <!-- ======================================================================= -->
+    <script>
+      (function() {
+        // Recuperar tema guardado o usar preferencia del sistema
+        const savedTheme = localStorage.getItem('corex_theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
+          document.documentElement.classList.add('dark');
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#1e293b');
+        } else if (savedTheme === 'light') {
+          document.documentElement.classList.remove('dark');
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#2563EB');
+        }
+      })();
+    </script>
+  </head>
+  
+  <body>
+    <!-- ======================================================================= -->
+    <!-- CONTENEDOR PRINCIPAL DE REACT                                           -->
+    <!-- ======================================================================= -->
+    <!-- React montará toda la aplicación aquí -->
+    <div id="root">
+      <!-- Loader visual mientras React carga -->
+      <div class="corex-loader">
+        <div>Cargando Mr. Tatoo...</div>
+      </div>
+    </div>
+    
+    <!-- ======================================================================= -->
+    <!-- MANIFEST (PWA) - Opcional                                               -->
+    <!-- ======================================================================= -->
+    <link rel="manifest" href="manifest.json" crossorigin="use-credentials" />
+    
+    <!-- Registro de Service Worker solo en producción -->
+    <script type="module">
+      if ('serviceWorker' in navigator && import.meta.env.PROD) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).then((registration) => {
+            console.log('Service Worker registrado:', registration.scope);
+          }).catch((error) => {
+            console.log('Error registrando Service Worker:', error);
+          });
+        });
+      }
+    </script>
+    
+    <!-- Punto de entrada de React (requerido por Vite) -->
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

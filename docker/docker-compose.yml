@@ -1,0 +1,579 @@
+# docker-compose.yml
+# ============================================
+# docker-compose.yml
+# Orquestación completa de MiApp
+# ============================================
+
+version: '3.8'
+
+# ============================================
+# REDES
+# ============================================
+networks:
+  mi-app-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# ============================================
+# VOLÚMENES
+# ============================================
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+  postgres_data:
+    driver: local
+  mongodb_data:
+    driver: local
+  minio_data:
+    driver: local
+  elasticsearch_data:
+    driver: local
+  backend_storage:
+    driver: local
+  frontend_build:
+    driver: local
+
+# ============================================
+# SERVICIOS
+# ============================================
+services:
+
+  # ==========================================
+  # FRONTEND - React/Vue.js
+  # ==========================================
+  frontend:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.frontend
+      target: production
+      args:
+        - API_URL=${API_URL:-https://api.miapp.com}
+        - NODE_ENV=production
+    container_name: mi-app-frontend
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ:-Europe/Madrid}
+      - NODE_ENV=production
+      - VIRTUAL_HOST=${DOMAIN:-miapp.com}
+      - LETSENCRYPT_HOST=${DOMAIN:-miapp.com}
+    volumes:
+      - frontend_build:/usr/share/nginx/html
+      - ./docker/nginx/frontend.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/nginx/security-headers.conf:/etc/nginx/security-headers.conf:ro
+      - ./docker/nginx/gzip.conf:/etc/nginx/gzip.conf:ro
+      - ./logs/nginx:/var/log/nginx
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+      - "${FRONTEND_SSL_PORT:-443}:443"
+    networks:
+      - mi-app-network
+    depends_on:
+      - backend
+      - nginx-proxy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`${DOMAIN:-miapp.com}`)"
+      - "traefik.http.services.frontend.loadbalancer.server.port=80"
+
+  # ==========================================
+  # BACKEND - PHP/Laravel
+  # ==========================================
+  backend:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.backend
+      target: production
+    container_name: mi-app-backend
+    restart: unless-stopped
+    environment:
+      - APP_ENV=${APP_ENV:-production}
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - APP_URL=${APP_URL:-https://miapp.com}
+      - APP_NAME=${APP_NAME:-MiApp}
+      - APP_TIMEZONE=${TZ:-Europe/Madrid}
+      - APP_LOCALE=es
+      
+      # Base de datos
+      - DB_CONNECTION=${DB_CONNECTION:-mysql}
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE:-mi_app}
+      - DB_USERNAME=${DB_USERNAME:-mi_app_user}
+      - DB_PASSWORD=${DB_PASSWORD:-secure_password}
+      
+      # PostgreSQL (opcional)
+      - DB_PGSQL_HOST=postgres
+      - DB_PGSQL_PORT=5432
+      - DB_PGSQL_DATABASE=${DB_PGSQL_DATABASE:-mi_app_pgsql}
+      - DB_PGSQL_USERNAME=${DB_PGSQL_USERNAME:-mi_app_user}
+      - DB_PGSQL_PASSWORD=${DB_PGSQL_PASSWORD:-secure_password}
+      
+      # Redis
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-redis_password}
+      
+      # Cache
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+      
+      # Mail
+      - MAIL_MAILER=${MAIL_MAILER:-smtp}
+      - MAIL_HOST=${MAIL_HOST:-smtp.gmail.com}
+      - MAIL_PORT=${MAIL_PORT:-587}
+      - MAIL_USERNAME=${MAIL_USERNAME:-}
+      - MAIL_PASSWORD=${MAIL_PASSWORD:-}
+      - MAIL_ENCRYPTION=${MAIL_ENCRYPTION:-tls}
+      - MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS:-noreply@miapp.com}
+      - MAIL_FROM_NAME="${APP_NAME:-MiApp}"
+      
+      # AWS S3
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
+      - AWS_BUCKET=${AWS_BUCKET:-mi-app-storage}
+      
+      # WhatsApp
+      - WHATSAPP_API_URL=${WHATSAPP_API_URL:-}
+      - WHATSAPP_API_TOKEN=${WHATSAPP_API_TOKEN:-}
+      - WHATSAPP_PHONE=${WHATSAPP_PHONE:-34123456789}
+      
+      # Seguridad
+      - LOG_CHANNEL=stack
+      - LOG_LEVEL=warning
+      - SESSION_LIFETIME=120
+      - SESSION_SECURE_COOKIE=true
+      
+    volumes:
+      - backend_storage:/var/www/html/storage
+      - ./public/uploads:/var/www/html/public/uploads
+      - ./logs/backend:/var/www/html/storage/logs
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/app.ini:ro
+      - ./docker/php/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini:ro
+    networks:
+      - mi-app-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+
+  # ==========================================
+  # QUEUE WORKER - Procesamiento de colas
+  # ==========================================
+  queue-worker:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.backend
+      target: production
+    container_name: mi-app-queue-worker
+    restart: unless-stopped
+    command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - DB_HOST=mysql
+      - DB_DATABASE=mi_app
+      - DB_USERNAME=mi_app_user
+      - DB_PASSWORD=secure_password
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=redis_password
+    volumes:
+      - backend_storage:/var/www/html/storage
+      - ./logs/queue:/var/www/html/storage/logs
+    networks:
+      - mi-app-network
+    depends_on:
+      - backend
+      - mysql
+      - redis
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+
+  # ==========================================
+  # SCHEDULER - Tareas programadas
+  # ==========================================
+  scheduler:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.backend
+      target: production
+    container_name: mi-app-scheduler
+    restart: unless-stopped
+    command: php artisan schedule:work
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - DB_HOST=mysql
+      - DB_DATABASE=mi_app
+      - DB_USERNAME=mi_app_user
+      - DB_PASSWORD=secure_password
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=redis_password
+    volumes:
+      - backend_storage:/var/www/html/storage
+      - ./logs/scheduler:/var/www/html/storage/logs
+    networks:
+      - mi-app-network
+    depends_on:
+      - backend
+      - mysql
+      - redis
+
+  # ==========================================
+  # MYSQL - Base de datos principal
+  # ==========================================
+  mysql:
+    image: mysql:8.0
+    container_name: mi-app-mysql
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE:-mi_app}
+      - MYSQL_USER=${DB_USERNAME:-mi_app_user}
+      - MYSQL_PASSWORD=${DB_PASSWORD:-secure_password}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-root_password}
+      - TZ=${TZ:-Europe/Madrid}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./backups/mysql:/backups
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    networks:
+      - mi-app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-root_password}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+
+  # ==========================================
+  # POSTGRESQL - Base de datos secundaria
+  # ==========================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: mi-app-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${DB_PGSQL_DATABASE:-mi_app_pgsql}
+      - POSTGRES_USER=${DB_PGSQL_USERNAME:-mi_app_user}
+      - POSTGRES_PASSWORD=${DB_PGSQL_PASSWORD:-secure_password}
+      - TZ=${TZ:-Europe/Madrid}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    networks:
+      - mi-app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_PGSQL_USERNAME:-mi_app_user} -d ${DB_PGSQL_DATABASE:-mi_app_pgsql}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ==========================================
+  # MONGODB - Base de datos NoSQL (logs, actividades)
+  # ==========================================
+  mongodb:
+    image: mongo:7
+    container_name: mi-app-mongodb
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER:-admin}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD:-admin_password}
+      - MONGO_INITDB_DATABASE=mi_app_logs
+    volumes:
+      - mongodb_data:/data/db
+      - ./docker/mongodb/init.js:/docker-entrypoint-initdb.d/init.js:ro
+    ports:
+      - "${MONGODB_PORT:-27017}:27017"
+    networks:
+      - mi-app-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================
+  # REDIS - Cache y colas
+  # ==========================================
+  redis:
+    image: redis:7.0-alpine
+    container_name: mi-app-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-redis_password} --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    networks:
+      - mi-app-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-redis_password}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+
+  # ==========================================
+  # REDIS INSIGHT - UI para Redis (opcional)
+  # ==========================================
+  redis-insight:
+    image: redis/redisinsight:latest
+    container_name: mi-app-redis-insight
+    restart: unless-stopped
+    ports:
+      - "${REDIS_INSIGHT_PORT:-8001}:8001"
+    volumes:
+      - redis-insight:/db
+    networks:
+      - mi-app-network
+    depends_on:
+      - redis
+    profiles:
+      - dev
+      - monitoring
+
+  # ==========================================
+  # MINIO - Almacenamiento S3 compatible
+  # ==========================================
+  minio:
+    image: minio/minio:latest
+    container_name: mi-app-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER:-minioadmin}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-minioadmin123}
+    volumes:
+      - minio_data:/data
+    ports:
+      - "${MINIO_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    networks:
+      - mi-app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    profiles:
+      - storage
+      - full
+
+  # ==========================================
+  # ELASTICSEARCH - Logging y búsqueda
+  # ==========================================
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
+    container_name: mi-app-elasticsearch
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - xpack.security.enabled=false
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "${ELASTICSEARCH_PORT:-9200}:9200"
+    networks:
+      - mi-app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200/_cluster/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+    profiles:
+      - logging
+      - full
+
+  # ==========================================
+  # KIBANA - UI para Elasticsearch
+  # ==========================================
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.10.0
+    container_name: mi-app-kibana
+    restart: unless-stopped
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "${KIBANA_PORT:-5601}:5601"
+    networks:
+      - mi-app-network
+    depends_on:
+      - elasticsearch
+    profiles:
+      - logging
+      - full
+
+  # ==========================================
+  # NGINX PROXY - Reverse proxy (opcional)
+  # ==========================================
+  nginx-proxy:
+    image: nginx:1.24-alpine
+    container_name: mi-app-nginx-proxy
+    restart: unless-stopped
+    volumes:
+      - ./docker/nginx/proxy.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./logs/nginx-proxy:/var/log/nginx
+      - ./docker/ssl:/etc/nginx/ssl:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - mi-app-network
+    depends_on:
+      - frontend
+      - backend
+    profiles:
+      - proxy
+      - full
+
+  # ==========================================
+  # LETSENCRYPT - SSL automático
+  # ==========================================
+  certbot:
+    image: certbot/certbot:latest
+    container_name: mi-app-certbot
+    restart: unless-stopped
+    volumes:
+      - ./docker/ssl:/etc/letsencrypt
+      - ./docker/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    profiles:
+      - ssl
+      - full
+
+  # ==========================================
+  # PHPMyAdmin - UI para MySQL
+  # ==========================================
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: mi-app-phpmyadmin
+    restart: unless-stopped
+    environment:
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
+      - PMA_ARBITRARY=1
+      - UPLOAD_LIMIT=100M
+    ports:
+      - "${PHPMYADMIN_PORT:-8080}:80"
+    networks:
+      - mi-app-network
+    depends_on:
+      - mysql
+    profiles:
+      - dev
+      - tools
+
+  # ==========================================
+  # ADMINER - UI para múltiples bases de datos
+  # ==========================================
+  adminer:
+    image: adminer:latest
+    container_name: mi-app-adminer
+    restart: unless-stopped
+    ports:
+      - "${ADMINER_PORT:-8081}:8080"
+    networks:
+      - mi-app-network
+    depends_on:
+      - mysql
+      - postgres
+    profiles:
+      - dev
+      - tools
+
+  # ==========================================
+  # MAILHOG - Email testing (desarrollo)
+  # ==========================================
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mi-app-mailhog
+    restart: unless-stopped
+    ports:
+      - "${MAILHOG_SMTP_PORT:-1025}:1025"
+      - "${MAILHOG_UI_PORT:-8025}:8025"
+    networks:
+      - mi-app-network
+    profiles:
+      - dev
+      - mail
+
+# ==========================================
+# CONFIGURACIÓN DE ENTORNO
+# ==========================================
+env_file:
+  - .env
+  - .env.production

@@ -1,0 +1,620 @@
+# ============================================
+# .gitignore
+# Archivos y directorios ignorados por Git
+# Proyecto: MiApp (Fullstack)
+# ============================================
+
+# ============================================
+# Dependencias
+# ============================================
+
+# PHP / Composer
+/vendor/
+composer.phar
+composer.lock
+.phplint.yml
+.phpunit.result.cache
+.php-cs-fixer.cache
+.phpcs-cache
+
+# Node.js / NPM / Yarn
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+# package-lock.json se versiona (necesario para npm ci en Docker)
+yarn.lock
+.pnpm-debug.log
+pnpm-lock.yaml
+
+# ============================================
+# Entornos y configuraciones
+# ============================================
+
+# Environment files
+.env
+.env.*
+!.env.example
+!.env.testing
+!.env.production
+!.env.staging
+!.env.development
+!.env.pages
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.editorconfig
+*.sublime-*
+.project
+.classpath
+.settings/
+.actor
+.vscode-test/
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.tmp
+*.temp
+*.cache
+
+# ============================================
+# Directorios de almacenamiento
+# ============================================
+
+# Laravel specific
+/storage/
+/public/storage
+/storage/*.key
+/storage/framework/
+/storage/logs/
+/storage/debugbar/
+/storage/app/public/
+/bootstrap/cache/
+*.sqlite
+*.sqlite-journal
+
+# Uploads and media
+/public/uploads/
+/public/images/
+/public/files/
+/public/media/
+/storage/uploads/
+/storage/media/
+/storage/images/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+*.svg
+*.ico
+*.mp4
+*.mp3
+*.avi
+*.mov
+*.pdf
+*.doc
+*.docx
+*.xls
+*.xlsx
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
+
+# Assets estáticos del front (home/logos) — deben ir al repo y al build Docker
+!frontend/public/
+!frontend/public/**
+!frontend/public/images/
+!frontend/public/images/**
+!frontend/src/assets/
+!frontend/src/assets/**
+!frontend/src/assets/images/
+!frontend/src/assets/images/**
+
+# ============================================
+# Logs y reportes
+# ============================================
+
+# Log files
+*.log
+logs/
+*.log.*
+error_log
+access_log
+laravel.log
+storage/logs/*.log
+storage/logs/*.log.*
+/var/log/
+
+# Coverage reports
+coverage/
+.coverage
+.coverage.*
+.nyc_output/
+*.lcov
+*.clover
+*.xml
+htmlcov/
+
+# Test reports
+test-reports/
+test-results/
+.junit/
+.phpunit.result.cache
+.php_cs.cache
+.phpcs-cache
+
+# ============================================
+# Builds y distribuciones
+# ============================================
+
+# Frontend builds
+/build/
+/dist/
+/public/build/
+/public/css/
+/public/js/
+/public/mix-manifest.json
+/public/hot
+/public/hot-update.json
+/public/hot-update.js
+*.hot-update.js
+*.hot-update.json
+
+# Backend builds
+*.phar
+*.phar.gz
+*.tar.gz
+*.zip
+*.rar
+
+# Docker
+docker-compose.override.yml
+docker-compose.local.yml
+.docker/
+docker/.env
+docker/ssl/*.pem
+docker/ssl/*.key
+docker/ssl/*.crt
+
+# ============================================
+# Cache y archivos temporales
+# ============================================
+
+# PHP cache
+.phpunit.result.cache
+.opcache/
+.cache/
+.cache-loader/
+
+# Laravel cache
+bootstrap/cache/*.php
+!bootstrap/cache/.gitkeep
+storage/framework/cache/
+storage/framework/sessions/
+storage/framework/testing/
+storage/framework/views/
+storage/framework/schedule-*
+
+# Node cache
+.npm/
+.nvm/
+.yarn/
+.yarn-cache/
+.eslintcache
+.parcel-cache/
+.next/
+.nuxt/
+.output/
+.cache-loader
+
+# ============================================
+# Archivos de sesión y autenticación
+# ============================================
+
+# Session files
+sessions/
+session/
+tmp/sessions/
+storage/framework/sessions/*
+
+# Auth files
+*.key
+*.pem
+*.crt
+*.csr
+*.p12
+*.pfx
+.htpasswd
+.htaccess
+
+# OAuth
+.oauth/
+.credentials/
+.secrets/
+secrets/
+
+# ============================================
+# Bases de datos
+# ============================================
+
+# SQLite
+*.sqlite
+*.sqlite3
+*.db
+*.db3
+
+# MySQL / SQL dumps (no versionar dumps)
+*.sql.gz
+*.sql.zip
+*.dump
+*.backup
+# Permitir esquema y migraciones del proyecto
+!database/**/*.sql
+
+# PostgreSQL dumps
+*.psql
+*.backup
+
+# MongoDB
+*.bson
+*.dump
+
+# ============================================
+# Backups
+# ============================================
+
+*.backup
+*.bak
+*.old
+*.orig
+*.rej
+*~
+*.swp
+*.swo
+*.save
+
+backups/
+backup_*/
+backup-*.sql
+backup-*.tar.gz
+*.backup.sql
+
+# ============================================
+# IDE y herramientas específicas
+# ============================================
+
+# PHPStorm
+/.idea/
+*.iml
+*.iws
+*.ipr
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dataSources.local.xml
+.idea/dataSources/
+
+# VSCode
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/sftp.json
+.history/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+.sublime/
+
+# Atom
+.atom/
+.apm/
+
+# NetBeans
+nbproject/
+nb-configuration.xml
+
+# Eclipse
+.project
+.classpath
+.settings/
+.metadata/
+
+# ============================================
+# Herramientas de calidad de código
+# ============================================
+
+# PHPUnit
+.phpunit.result.cache
+.phpunit.cache
+.coverage
+
+# PHP CS Fixer
+.php_cs.cache
+.php-cs-fixer.cache
+
+# PHPStan
+phpstan.neon
+.tmp.phpstan
+phpstan-result.cache
+
+# Psalm
+psalm.xml
+psalm-report.json
+
+# ESLint
+.eslintcache
+
+# Prettier
+.prettierrc
+.prettierignore
+
+# Stylelint
+.stylelintcache
+
+# ============================================
+# Herramientas de despliegue
+# ============================================
+
+# Capistrano
+/config/deploy.rb
+/config/deploy/
+
+# Envoy
+.envoy
+
+# Deployer
+.dep/
+
+# Ansible
+*.retry
+ansible/*.retry
+
+# Kubernetes
+*.secret.yaml
+secrets.yaml
+
+# Helm
+charts/*/values-secret.yaml
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# ============================================
+# Herramientas de CI/CD
+# ============================================
+
+# GitHub Actions
+.github/workflows/*.secret.yml
+
+# GitLab CI
+.gitlab-ci.yml.secret
+
+# Jenkins
+.jenkins/
+.jenkins/secrets/
+
+# CircleCI
+.circleci/secrets/
+
+# Travis CI
+.travis.yml.secret
+
+# ============================================
+# Documentación generada
+# ============================================
+
+# API docs
+/docs/api/
+/apidoc/
+/swagger/
+/redoc/
+/phpdoc/
+
+# Generated docs
+/docs/_build/
+/docs/build/
+/docs/output/
+/docs/.vuepress/dist/
+
+# ============================================
+# Archivos específicos del proyecto
+# ============================================
+
+# Laravel
+.stub.php
+Homestead.json
+Homestead.yaml
+.env.homestead
+.env.homestead.local
+.env.vapor
+.env.production
+.env.staging
+.env.development
+.nova
+
+# Node
+.npmrc
+.yarnrc
+.nvmrc
+.node-version
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+docker-compose.local.yml
+.docker/sync/
+
+# Scripts temporales
+temp/
+tmp/
+temp_*
+tmp_*
+*.tmp
+*.temp
+
+# ============================================
+# Archivos de desarrollo personal
+# ============================================
+
+# Local development
+*.local
+*.local.php
+*.local.js
+*.local.css
+*.local.scss
+*.local.sass
+*.local.less
+
+# Personal config
+.psqlrc
+.bashrc
+.bash_profile
+.zshrc
+.oh-my-zsh/
+
+# ============================================
+# Archivos de prueba
+# ============================================
+
+# Testing
+*.test
+*.spec
+*.feature
+*.step
+*.steps
+*.feature.php
+
+# Fixtures
+/tests/Fixtures/
+/fixtures/
+/_fixtures/
+
+# ============================================
+# Seguridad
+# ============================================
+
+# Security sensitive files
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.key
+*.pem
+*.crt
+*.csr
+*.secret
+*.secrets
+secret/
+secrets/
+.credentials/
+.gcloud/
+.aws/
+.ssh/
+.ssh/**/*
+!*.pub
+
+# API keys
+.env.*.key
+*.apikey
+*.api-key
+*.token
+*.tokens
+
+# ============================================
+# Excepciones - Archivos que SÍ deben incluirse
+# ============================================
+
+# Pero mantén estos archivos
+!.env.example
+!.env.testing.example
+!.gitkeep
+!.gitignore
+!storage/.gitkeep
+!bootstrap/cache/.gitkeep
+!public/storage/.gitkeep
+!storage/logs/.gitkeep
+!storage/framework/.gitkeep
+!storage/framework/cache/.gitkeep
+!storage/framework/sessions/.gitkeep
+!storage/framework/testing/.gitkeep
+!storage/framework/views/.gitkeep
+!public/uploads/.gitkeep
+
+# Archivos de configuración de ejemplo
+!*.dist
+!*.example
+!*.sample
+!*.template
+!phpunit.xml
+!phpunit.xml.dist
+!phpcs.xml.dist
+!phpmd.xml.dist
+
+# ============================================
+# Instrucciones adicionales
+# ============================================
+
+# Archivos grandes o no necesarios
+*.mp4
+*.avi
+*.mov
+*.flv
+*.mkv
+*.iso
+*.dmg
+*.exe
+*.msi
+*.deb
+*.rpm
+
+# Archivos de documentación compilados
+*.pdf
+*.epub
+*.mobi
+
+# Archivos de diseño
+*.psd
+*.ai
+*.sketch
+*.fig
+*.xd
+*.afdesign
+*.afphoto
+*.afpub
+
+# ============================================
+# Nota: Los archivos sensibles como .env deben estar
+# en .gitignore y ser gestionados mediante variables
+# de entorno o sistemas de gestión de secretos
+# ============================================
+
+# === CoreX repo privado (2026-07-08) — SÍ versionar .env ===
+# Ver docs/REPO-PRIVADO.md
+!backend/.env
+!backend/.env.lan
+!backend/.env.production
+!frontend/.env
+!frontend/.env.lan
+!frontend/.env.production
+
+# === Visor MkDocs (HU-065) ===
+.venv-docs/
+# HTML generado (mantener README placeholder)
+frontend/public/docs/**
+!frontend/public/docs/README.md
+.cache/
